@@ -43,6 +43,7 @@ object YouTubeUploader {
   // get videos recursively and upload them to youtube and post them to tumblr
   def upload(path: Path, uploadPF: File => VideoEntry, writePF: (File, String) => Unit): Unit = path.isFile match {
     case true =>
+      println(path)
       val entry = uploadPF(path.toFile)
       writePF(path.toFile, entry.getHtmlLink.getHref)
     case false => path.walkFilter(
@@ -85,7 +86,6 @@ object YouTubeUploader {
   def write(name: String, email: String, password: String, file: File, link: String) {
     val caption = getCaption(file)
     val date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(getDate(file))
-    println(file)
     println(caption)
     println(date)
 
@@ -110,8 +110,6 @@ object YouTubeUploader {
     params.map(pair => httpParams.add(new BasicNameValuePair(pair._1, pair._2)))
 
     httpPost.setEntity(new UrlEncodedFormEntity(httpParams, "UTF-8"))
-
-    Thread.sleep(1000) // avoid exceeding tumblr rate limit
 
     count += 1
     println("Uploading photo No.%d".format(count))
