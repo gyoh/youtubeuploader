@@ -1,27 +1,20 @@
-import collection.JavaConversions._
 import io.Source
-import tools.nsc.io.{Path, File, Directory}
-import java.io._
+import tools.nsc.io.{Path, File}
 import java.text.SimpleDateFormat
-import java.util.{ArrayList, Calendar, Date}
+import java.util.Date
 import java.net.URL
 
 import org.apache.http.impl.client.DefaultHttpClient
 import org.apache.http.client.methods.HttpPost
-import org.apache.http.params.BasicHttpParams
 import org.apache.http.entity.BufferedHttpEntity
-import org.apache.http.entity.StringEntity
 import org.apache.http.client.entity.UrlEncodedFormEntity
 import org.apache.http.NameValuePair
 import org.apache.http.message.BasicNameValuePair
 
-import com.google.gdata.client._
 import com.google.gdata.client.youtube._
-import com.google.gdata.data._
 import com.google.gdata.data.media._
 import com.google.gdata.data.media.mediarss._
 import com.google.gdata.data.youtube._
-import com.google.gdata.data.extensions._
 import com.google.gdata.util._
 
 object YouTubeUploader {
