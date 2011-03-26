@@ -98,7 +98,7 @@ object YouTubeUploader {
       "password" -> password,
       "type" -> "video",
       "embed" -> link,
-      "generator" -> "Shun Album",
+      "generator" -> "YouTube Uploader",
       "date" -> date,
       "caption" -> caption,
       "group" -> "%s.tumblr.com".format(name),
@@ -112,7 +112,7 @@ object YouTubeUploader {
     httpPost.setEntity(new UrlEncodedFormEntity(httpParams, "UTF-8"))
 
     count += 1
-    println("Uploading photo No.%d".format(count))
+    println("Uploading video No.%d".format(count))
 
     val httpResponse = httpClient.execute(httpPost)
     val statusLine = httpResponse.getStatusLine
