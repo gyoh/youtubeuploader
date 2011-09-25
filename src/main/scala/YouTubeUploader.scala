@@ -27,18 +27,36 @@ object YouTubeUploader {
   var count = 0  // number of videos uploaded
 
   def main(args: Array[String]) {
-    require(args.length == 5)
-    val youTubeName = args(0)     // YouTube name
-    val youTubePassword = args(1) // YouTube password
-    val tumblrName = args(2)      // tumblr name
-    val tumblrEmail = args(3)     // tumblr email
-    val tumblrPassword = args(4)  // tumblr password
-
-    upload(Path("/home/gyo/Videos/family"),
-      upload(youTubeName, youTubePassword, _),
-      write(tumblrName, tumblrEmail, tumblrPassword, _, _))
+    args.length match {
+      case 3 =>
+        val youTubeName = args(1)     // YouTube name
+        val youTubePassword = args(2) // YouTube password
+        upload(Path(args(0)),
+          upload(youTubeName, youTubePassword, _))
+      case 6 =>
+        val youTubeName = args(1)     // YouTube name
+        val youTubePassword = args(2) // YouTube password
+        val tumblrName = args(3)      // tumblr name
+        val tumblrEmail = args(4)     // tumblr email
+        val tumblrPassword = args(5)  // tumblr password
+        upload(Path(args(0)),
+          upload(youTubeName, youTubePassword, _),
+          write(tumblrName, tumblrEmail, tumblrPassword, _, _))
+      case _ =>
+        println("Please provide youtube name and password.")
+    }
   }
 
+  // get videos recursively and upload them to youtube
+  def upload(path: Path, uploadPF: File => VideoEntry): Unit = path.isFile match {
+    case true =>
+      println(path)
+      uploadPF(path.toFile)
+    case false => path.walkFilter(
+      p => p.isDirectory || p.extension.equalsIgnoreCase("mp4") || p.extension.equalsIgnoreCase("m4v"))
+      .toList.sortWith(_.toFile.lastModified < _.toFile.lastModified)
+      .foreach(upload(_, uploadPF))
+  }
 
   // get videos recursively and upload them to youtube and post them to tumblr
   def upload(path: Path, uploadPF: File => VideoEntry, writePF: (File, String) => Unit): Unit = path.isFile match {
@@ -48,6 +66,7 @@ object YouTubeUploader {
       writePF(path.toFile, entry.getHtmlLink.getHref)
     case false => path.walkFilter(
       p => p.isDirectory || p.extension.equalsIgnoreCase("mp4") || p.extension.equalsIgnoreCase("m4v"))
+      .toList.sortWith(_.toFile.lastModified < _.toFile.lastModified)
       .foreach(upload(_, uploadPF, writePF))
   }
 
@@ -85,7 +104,8 @@ object YouTubeUploader {
   // write to tumblr
   def write(name: String, email: String, password: String, file: File, link: String) {
     val caption = getCaption(file)
-    val date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(getDate(file))
+    //val date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(getDate(file))
+    val date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(file.lastModified)
     println(caption)
     println(date)
 
