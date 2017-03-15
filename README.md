@@ -31,4 +31,4 @@ Notes
 
 The code does not handle the quota issue mentioned below:
 
-* http://gyo.hamamoto.org/youtube-api-blog-best-practices-for-avoiding
+* http://gyo.hamamoto.org/post/49440033897/youtube-api-blog-best-practices-for-avoiding
